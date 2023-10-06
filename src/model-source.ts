@@ -1,8 +1,9 @@
 import { injectable } from 'inversify';
 import { ActionHandlerRegistry, LocalModelSource } from 'sprotty';
 import { Action, CollapseExpandAction } from 'sprotty-protocol';
-import { ExpansionState } from './model';
 import { generate } from './generator';
+import { ExpansionState } from './model';
+import { preprocess } from './preprocessor';
 
 @injectable()
 export class DemoModelSource extends LocalModelSource {
@@ -24,8 +25,6 @@ export class DemoModelSource extends LocalModelSource {
         }
     }
 
-    
-
     handleCollapseExpandAction(action: CollapseExpandAction) {
         action.expandIds.forEach(id => {
             this.expansionState[id] = true;
@@ -36,7 +35,8 @@ export class DemoModelSource extends LocalModelSource {
 
         const data = require('./data.json');
 
-        const model = generate(data, this.expansionState);
+        const preprocessedGraph = preprocess(data, this.expansionState);
+        const model = generate(preprocessedGraph, this.expansionState);
 
         this.updateModel(model);
     }

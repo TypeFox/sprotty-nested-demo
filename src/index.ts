@@ -1,9 +1,10 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 
-import { LocalModelSource, TYPES } from 'sprotty'
-import createContainer from './di.config'
-import { Directory } from './model';
+import { LocalModelSource, TYPES } from 'sprotty';
+import createContainer from './di.config';
 import { generate } from './generator';
+import { Directory } from './model';
+import { preprocess } from './preprocessor';
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = createContainer('sprotty-diagram');
@@ -11,7 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const rawData = require('./data.json') as Directory;
 
-    const graph = generate(rawData, {});
+    const preprocessed = preprocess(rawData, {});
+
+    const graph = generate(preprocessed, {});
 
     modelSource.setModel(graph);
 });

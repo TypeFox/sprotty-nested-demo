@@ -1,12 +1,12 @@
 
 import ElkConstructor from "elkjs/lib/elk.bundled";
 import { Container, ContainerModule } from "inversify";
-import { CircularNodeView, ConsoleLogger, LocalModelSource, LogLevel, PolylineEdgeView, PolylineEdgeViewWithGapsOnIntersections, RectangularNodeView, SButtonImpl, SCompartmentImpl, SCompartmentView, SEdgeImpl, SGraphImpl, SGraphView, SLabelImpl, SLabelView, SNodeImpl, SPortImpl, TYPES, configureModelElement, configureViewerOptions, edgeIntersectionModule, edgeLayoutModule, hoverFeedbackFeature, layoutableChildFeature, loadDefaultModules, moveFeature } from "sprotty";
+import { CircularNodeView, ConsoleLogger, LogLevel, RectangularNodeView, SButtonImpl, SCompartmentImpl, SCompartmentView, SEdgeImpl, SGraphImpl, SGraphView, SLabelImpl, SLabelView, SNodeImpl, SPortImpl, TYPES, configureModelElement, configureViewerOptions, edgeIntersectionModule, hoverFeedbackFeature, loadDefaultModules, moveFeature, selectFeature } from "sprotty";
 import { ElkFactory, ElkLayoutEngine, ILayoutConfigurator, elkLayoutModule } from "sprotty-elk/lib/inversify";
 import { DemoLayoutConfigurator } from "./layout";
 import { DirectoryImpl } from "./model";
-import { ExpandButtonView, PolylineEdgeViewWithArrow } from "./views";
 import { DemoModelSource } from "./model-source";
+import { ExpandButtonView, PolylineEdgeViewWithArrow } from "./views";
 
 
 const elkFactory: ElkFactory = () => new ElkConstructor();
@@ -32,7 +32,7 @@ export default (containerId: string) => {
         configureModelElement(context, 'label', SLabelImpl, SLabelView);
         configureModelElement(context, 'button:expand', SButtonImpl, ExpandButtonView);
         configureModelElement(context, 'node:compartment', SCompartmentImpl, SCompartmentView);
-        configureModelElement(context, 'edge', SEdgeImpl, PolylineEdgeViewWithArrow);
+        configureModelElement(context, 'edge', SEdgeImpl, PolylineEdgeViewWithArrow, {disable: [selectFeature]});
 
         configureViewerOptions(context, {
             needsClientLayout: true,
