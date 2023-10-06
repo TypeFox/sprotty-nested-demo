@@ -1,0 +1,20 @@
+{
+    "name": "sprotty-nested-demo",
+    "description": "Please enter a brief description here",
+    "scripts": {
+        "build": "esbuild ./src/index.ts --bundle --sourcemap --outfile=./static/index.js",
+        "generate-data": "ts-node ./scripts/generateData.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^20.8.2",
+        "esbuild": "^0.17.8",
+        "ts-node": "^10.9.1",
+        "typescript": "4.9.5"
+    },
+    "dependencies": {
+        "elkjs": "^0.8.2",
+        "reflect-metadata": "^0.1.13",
+        "sprotty": "^0.14.0",
+        "sprotty-elk": "^0.14.0"
+    }
+}

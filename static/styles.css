@@ -1,0 +1,51 @@
+.sprotty-graph {
+    height: 100vh;
+    width: 100%;
+}
+
+.sprotty-node.task.running {
+    fill: #aa2d2d;
+}
+
+.sprotty-node.task.finished {
+    fill: #81BB41;
+}
+
+text {
+    stroke-width: 0;
+    stroke: #000;
+    fill: #000;
+    font-family: sans-serif;
+    font-size: 10pt;
+    text-anchor: middle;
+}
+
+.sprotty-edge {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.directory > .sprotty-node {
+    fill: aliceblue;
+    stroke: blue;
+    stroke-width: 2;
+}
+
+.file > .sprotty-node {
+    fill: burlywood;
+    stroke: chocolate;
+    stroke-width: 2;
+}
+
+.arrowhead {
+    fill: black
+}
+
+.sprotty-missing {
+    position: absolute;
+    top: -1;
+    left: -1;
+    width: 1px;
+    height: 1px;
+}
