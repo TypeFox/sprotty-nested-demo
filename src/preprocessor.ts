@@ -1,10 +1,10 @@
 import { Directory, ExpansionState, File, PreprocessedEdge, PreprocessedGraph, PreprocessedNode } from "./model";
 
-export function preprocess(data: Directory, expansionState: ExpansionState): PreprocessedGraph {
+export function preprocess(data: Directory, expansionState: ExpansionState, expandAll?: boolean): PreprocessedGraph {
     const index = new Map<string, any>();
     const edgesIndex = new Map<string, any>();
 
-    const root = preprocessRoot(data, expansionState, index, edgesIndex);
+    const root = preprocessRoot(data, expansionState, index, edgesIndex, expandAll);
 
     const edges = preprocessEdges(index, edgesIndex);
     console.log(edges);
@@ -12,7 +12,7 @@ export function preprocess(data: Directory, expansionState: ExpansionState): Pre
     const preprocessedGraph = {
         type: 'graph',
         id: 'graph',
-        root: preprocessRoot(data, expansionState, index, edgesIndex),
+        root: root,
         index: index,
         edgesIndex: edgesIndex,
         edges: edges,
@@ -21,9 +21,9 @@ export function preprocess(data: Directory, expansionState: ExpansionState): Pre
     return preprocessedGraph;
 }
 
-function preprocessRoot(data: Directory, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>): PreprocessedNode {
-    const subDirectories = data.directories.map(directory => preprocessDirectory(directory, expansionState, index, edgesIndex, 'root')).filter(e => e !== undefined);
-    const subFiles = data.files.map(file => preprocessFile(file, expansionState, index, edgesIndex, 'root')).filter(e => e !== undefined);
+function preprocessRoot(data: Directory, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>, expandAll?: boolean): PreprocessedNode {
+    const subDirectories = data.directories.map(directory => preprocessDirectory(directory, expansionState, index, edgesIndex, 'root', expandAll)).filter(e => e !== undefined);
+    const subFiles = data.files.map(file => preprocessFile(file, expansionState, index, edgesIndex, 'root', expandAll)).filter(e => e !== undefined);
 
     const root = {
         type: 'directory',
@@ -39,10 +39,10 @@ function preprocessRoot(data: Directory, expansionState: ExpansionState, index: 
     return root;
 }
 
-function preprocessDirectory(data: Directory, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>, parent?: string): PreprocessedNode {
-    const subDirectories = data.directories.map(directory => preprocessDirectory(directory, expansionState, index, edgesIndex, data.path));
+function preprocessDirectory(data: Directory, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>, parent?: string, expandAll?: boolean): PreprocessedNode {
+    const subDirectories = data.directories.map(directory => preprocessDirectory(directory, expansionState, index, edgesIndex, data.path, expandAll));
     const subDirectoriesFiltered = subDirectories.filter(e => e !== undefined);
-    const subFiles = data.files.map(file => preprocessFile(file, expansionState, index, edgesIndex, data.path));
+    const subFiles = data.files.map(file => preprocessFile(file, expansionState, index, edgesIndex, data.path, expandAll));
     const subFilesFiltered = subFiles.filter(e => e !== undefined);
 
     const node = {
@@ -55,13 +55,17 @@ function preprocessDirectory(data: Directory, expansionState: ExpansionState, in
         isExpandable: subDirectories.length > 0 || subFiles.length > 0
     };
 
-    if (expansionState[parent] || parent === 'root') {
+    if (expandAll && (subDirectories.length > 0 || subFiles.length > 0)) {
+        expansionState[node.id] = true;
+    }
+
+    if (expansionState[parent] || parent === 'root' || expandAll) {
         index.set(node.id, node);
         return node;
     }
 }
 
-function preprocessFile(data: File, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>, parent?: string): PreprocessedNode {
+function preprocessFile(data: File, expansionState: ExpansionState, index: Map<string, any>, edgesIndex: Map<string, any>, parent?: string, expandAll?: boolean): PreprocessedNode {
     data.imports.forEach(imported => {
         const edge = {
             type: 'import',
@@ -80,7 +84,7 @@ function preprocessFile(data: File, expansionState: ExpansionState, index: Map<s
         parent: parent
     };
 
-    if (expansionState[parent] || parent === 'root') {
+    if (expansionState[parent] || parent === 'root' || expandAll) {
         index.set(node.id, node);
         return node;
     }

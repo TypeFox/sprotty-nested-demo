@@ -1,7 +1,7 @@
 /** @jsx svg */
 import { injectable } from 'inversify';
 import { VNode } from 'snabbdom';
-import { IView, PolylineEdgeView, PolylineEdgeViewWithGapsOnIntersections, RenderingContext, SButtonImpl, SEdgeImpl, findParentByFeature, isExpandable } from 'sprotty';
+import { CircularNodeView, Hoverable, IView, IViewArgs, PolylineEdgeView, RenderingContext, SButtonImpl, SEdgeImpl, SShapeElementImpl, Selectable, findParentByFeature, isExpandable } from 'sprotty';
 import { Point, toDegrees } from 'sprotty-protocol';
 import { svg } from 'sprotty/lib/lib/jsx';
 
@@ -35,4 +35,17 @@ export class PolylineEdgeViewWithArrow extends PolylineEdgeView {
         angle(x0: Point, x1: Point) {
             return toDegrees(Math.atan2(x1.y - x0.y, x1.x - x0.x));
         }
+}
+
+@injectable()
+export class PortView extends CircularNodeView {
+    render(node: Readonly<SShapeElementImpl & Hoverable & Selectable>, context: RenderingContext, args?: IViewArgs): VNode {
+        const parent = node.parent;
+        const childrenEdges = parent.children.filter(child => child instanceof SEdgeImpl);
+        const hasPort = parent.children.filter(child => child instanceof SEdgeImpl && (child.sourceId.startsWith('port-') || child.targetId.startsWith('port'))).length > 0;
+
+        if (hasPort) {
+            return super.render(node, context, args);
+        }
+    }
 }

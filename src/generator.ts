@@ -48,10 +48,13 @@ function generateNode(preprocessedNode: PreprocessedNode, index: Map<string, any
         children.push(...generatedEdges);
     }
 
-    children.push(<SPort>{
-        id: `port-${preprocessedNode.id}`,
-        type: 'port',
-    });
+    if (preprocessedNode.name !== 'root') {
+        children.push(<SPort>{
+            id: `port-${preprocessedNode.id}`,
+            type: 'port',
+            size: { width: 8, height: 8 },
+        });
+    }
 
     const node = <SNode>{
         type: `node:${preprocessedNode.type}`,

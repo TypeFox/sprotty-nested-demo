@@ -49,3 +49,18 @@ text {
     width: 1px;
     height: 1px;
 }
+
+.toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.sprotty-port {
+    fill: black;
+    stroke: aliceblue;
+    stroke-width: 2;
+}
