@@ -65,7 +65,7 @@ function preprocessFile(data: File, expansionState: ExpansionState, index: Map<s
     data.imports.forEach(imported => {
         const edge = {
             type: 'import',
-            id: `${data.path}-${imported}`,
+            id: `${data.path}->${imported}`,
             sourceId: data.path,
             targetId: imported,
         };
@@ -94,7 +94,9 @@ function preprocessEdges(index: Map<string, any>, edgesIndex: Map<string, any>) 
         let target = index.get(edge.targetId);
 
         if (source && target) {
-            edges.push(edge);
+            const splitEdges = [];
+            splitEdge(edge, source.id, target.id, splitEdges);
+            edges.push(...splitEdges);
             continue;
         }
 
@@ -117,13 +119,84 @@ function preprocessEdges(index: Map<string, any>, edgesIndex: Map<string, any>) 
         }
 
         if (source.id !== target.id) {
-            edges.push(edge);
+            const splitEdges = [];
+            splitEdge(edge, source.id, target.id, splitEdges);
+            edges.push(...splitEdges);
         }
     }
 
     return edges;
 }
 
-function getParentOfEdge(sourceId: any): string | undefined {
+function splitEdge(edge: any, source: string, target: string, splitEdges: any[]): void {
+    let sourceParent = getParentOfEdge(source);
+    let targetParent = getParentOfEdge(target);
+    
+    if (sourceParent === targetParent) {
+        splitEdges.push(edge);
+        return;
+    }
+    
+    const commonPath = getCommonPath(source, target);
+    
+    while (sourceParent !== commonPath) {
+        splitEdges.push(<PreprocessedEdge>{
+            type: 'import',
+            id: `${source}->${sourceParent}`,
+            sourceId: source,
+            targetId: sourceParent,
+            isCrossBoundary: true,
+        });
+        
+        source = sourceParent;
+        if(source === '') {
+            break;
+        }
+        sourceParent = getParentOfEdge(source);
+    }
+    
+    while (targetParent !== commonPath) {
+        splitEdges.push(<PreprocessedEdge>{
+            type: 'import',
+            id: `${targetParent}->${target}`,
+            sourceId: targetParent,
+            targetId: target,
+            isCrossBoundary: true,
+        });
+        
+        target = targetParent;
+        if (target === '') {
+            break;
+        }
+        targetParent = getParentOfEdge(target);
+    }
+    
+    splitEdges.push(<PreprocessedEdge>{
+        type: 'import',
+        id: `${source}->${target}`,
+        sourceId: source,
+        targetId: target,
+        isCrossBoundary: true,
+    });
+}
+
+export function getParentOfEdge(sourceId: any): string | undefined {
     return sourceId.substring(0, sourceId.lastIndexOf('/'));
+}
+
+function getCommonPath(source, target): string {
+    const commonPath = [];
+
+    const sourcePathSplit = source.split('/');
+    const targetPathSplit = target.split('/');
+
+    for (let i = 0; i < sourcePathSplit.length; i++) {
+        if (sourcePathSplit[i] === targetPathSplit[i]) {
+            commonPath.push(sourcePathSplit[i]);
+        } else {
+            break;
+        }
+    }
+
+    return commonPath.join('/');
 }

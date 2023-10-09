@@ -31,7 +31,6 @@ export default (containerId: string) => {
         configureModelElement(context, 'port', SPortImpl, CircularNodeView)
         configureModelElement(context, 'label', SLabelImpl, SLabelView);
         configureModelElement(context, 'button:expand', SButtonImpl, ExpandButtonView);
-        configureModelElement(context, 'node:compartment', SCompartmentImpl, SCompartmentView);
         configureModelElement(context, 'edge', SEdgeImpl, PolylineEdgeViewWithArrow, {disable: [selectFeature]});
 
         configureViewerOptions(context, {

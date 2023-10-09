@@ -31,6 +31,13 @@ export class DemoModelSource extends LocalModelSource {
         })
         action.collapseIds.forEach(id => {
             this.expansionState[id] = false;
+
+            Object.keys(this.expansionState).forEach(key => {
+                if (key.startsWith(id)) {
+                    this.expansionState[key] = false;
+                }
+            })
+
         })
 
         const data = require('./data.json');

@@ -29,6 +29,7 @@ export interface PreprocessedEdge {
     id: string;
     sourceId: string;
     targetId: string;
+    isCrossBoundary: boolean;
 }
 
 export interface Graph {
