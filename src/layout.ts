@@ -12,19 +12,16 @@ export class DemoLayoutConfigurator extends DefaultLayoutConfigurator {
             'org.eclipse.elk.hierarchyHandling': 'INCLUDE_CHILDREN',
             'org.eclipse.elk.direction': 'UP',
             'org.eclipse.elk.layered.considerModelOrder.strategy': 'PREFER_NODES',
-            'org.eclipse.elk.portAlignment.default': 'CENTER',
-
         }
     }
     
     protected override nodeOptions(snode: SNode, index: SModelIndex): LayoutOptions {
         return {
-            'org.eclipse.elk.direction': 'UP',
-            'org.eclipse.elk.layered.considerModelOrder': 'PREFER_NODES',
-            'org.eclipse.elk.nodeSize.constraints': 'NODE_LABELS',
+            'org.eclipse.elk.nodeSize.constraints': 'NODE_LABELS PORTS',
             'org.eclipse.elk.nodeLabels.placement': 'INSIDE V_TOP H_CENTER',
             'org.eclipse.elk.nodeLabels.padding': '[top=10, bottom=0, left=20, right=20]',
             'org.eclipse.elk.portAlignment.default': 'CENTER',
+            'org.eclipse.elk.spacing.portsSurrounding': '[top=20, bottom=0, left=0, right=0]'
         }
     }
 
