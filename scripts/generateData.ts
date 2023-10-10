@@ -1,10 +1,10 @@
 // script to collect folder structure from a root folder
 
+import { error } from 'console';
 import * as fs from 'fs';
-import path, { resolve } from 'path';
+import path from 'path';
 import ts from 'typescript';
 import { Directory, File } from '../src/model';
-import { error } from 'console';
 
 const root = '/Users/guillaumefontorbe/git/Theia/theia/packages/core/src';
 

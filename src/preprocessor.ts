@@ -7,7 +7,6 @@ export function preprocess(data: Directory, expansionState: ExpansionState, expa
     const root = preprocessRoot(data, expansionState, index, edgesIndex, expandAll);
 
     const edges = preprocessEdges(index, edgesIndex);
-    console.log(edges);
 
     const preprocessedGraph = {
         type: 'graph',
