@@ -26,6 +26,8 @@ You should see this diagram:
 
 Rectangles with a blue outline represent folders, while rectangles with a chocolate outline represent files. You can expand single nodes by clicking on the triangular button located in the top left corner of each expandable node.
 
+Edges are displayed as arrows. They represent imports between TypeScript files in the project. For example, in the above diagram, some file or files in the folder `node` are importing from a file (or files) in the folder `common`. To see the full path of an edge, you'll have to expand the respective nodes.
+
 Alternatively, you can expand and collapse all nodes at once by clicking the `Expand All` and `Collapse All` buttons located in the top right corner of the page. The `Fit to Screen` button will change the panning and zoom level of the diagram so that it is fully visible in the viewport.
 
 ## Generate your own dataset
